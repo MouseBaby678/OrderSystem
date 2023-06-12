@@ -1,17 +1,20 @@
 package model;
 
 public class Business {
-    String name;
+    String username;
+    String password;
+    String restaurant_name;
 
-    public Business(String name) {
-        this.name = name;
+    public Business(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getRestaurant_name() {
+        return restaurant_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRestaurant_name(String restaurant_name) {
+        this.restaurant_name = restaurant_name;
     }
 }
