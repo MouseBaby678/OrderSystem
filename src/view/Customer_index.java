@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Customer_index extends JFrame {
 
@@ -30,7 +31,7 @@ public class Customer_index extends JFrame {
     /**
      * Launch the application.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         try
         {
             org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
@@ -46,7 +47,7 @@ public class Customer_index extends JFrame {
     /**
      * Create the frame.
      */
-    public Customer_index() {
+    public Customer_index() throws SQLException {
         setIconImage(Toolkit.getDefaultToolkit().getImage("img/餐厅.png"));
         setTitle("点餐界面");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,7 +74,11 @@ public class Customer_index extends JFrame {
         Confirm_Button.setBounds(202, 442, 286, 62);
         Confirm_Button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                order(Integer.parseInt(table_comboBox.getSelectedItem().toString()),phone_textField.getText());
+                try {
+                    order(Integer.parseInt(table_comboBox.getSelectedItem().toString()),phone_textField.getText());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
             }
         });
@@ -92,29 +97,28 @@ public class Customer_index extends JFrame {
         fillTable();
     }
 
-    private void order(int t_id, String phone_num){
+    private void order(int t_id, String phone_num) throws SQLException {
         if (StringUtil.isEmpty(phone_num)) {
-            JOptionPane.showMessageDialog(null, "电话不能为空!");
+            JOptionPane.showMessageDialog(null, "手机号不能为空!");
             return;
         }
         Connection con = null;
-        Customer customer = new Customer(t_id,Integer.parseInt(phone_num));
+        Customer customer = new Customer(t_id, phone_num);
         try {
             con = dbUtil.getCon();
             int addnum = CustomerDao.add(con,customer);
             int updatenum = DiningTableDao.update(con,new DiningTable(t_id,1));
             if (addnum == 1 && updatenum == 1) {
                 dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "失败!");
             }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }finally {
+            dbUtil.closeCon(con);
         }
     }
 
-    private void fillTable(){
+    private void fillTable() throws SQLException {
         Connection con = null;
         try {
             con = dbUtil.getCon();
@@ -124,6 +128,8 @@ public class Customer_index extends JFrame {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }finally {
+            dbUtil.closeCon(con);
         }
 
     }

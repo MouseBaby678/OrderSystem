@@ -11,7 +11,7 @@ public class CustomerDao {
         String sql = "insert into customer values(null,?,?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setInt(1, customer.getT_id());
-        pstmt.setInt(2, customer.getPhone_num());
+        pstmt.setString(2, customer.getPhone_num());
         return pstmt.executeUpdate();
     }
 }
