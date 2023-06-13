@@ -6,13 +6,16 @@ public class Order {
     int o_id;
     int t_id;
     int c_id;
+
+    String phone_num;
     String dish_name;
     BigDecimal cost_money;
 
-    public Order(int o_id, int t_id, int c_id, String dish_name, BigDecimal cost_money) {
+    public Order(int o_id, int t_id, int c_id, String phone_num, String dish_name, BigDecimal cost_money) {
         this.o_id = o_id;
         this.t_id = t_id;
         this.c_id = c_id;
+        this.phone_num = phone_num;
         this.dish_name = dish_name;
         this.cost_money = cost_money;
     }
@@ -39,6 +42,14 @@ public class Order {
 
     public void setC_id(int c_id) {
         this.c_id = c_id;
+    }
+
+    public String getPhone_num() {
+        return phone_num;
+    }
+
+    public void setPhone_num(String phone_num) {
+        this.phone_num = phone_num;
     }
 
     public String getDish_name() {
