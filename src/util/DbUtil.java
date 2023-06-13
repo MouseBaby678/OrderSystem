@@ -1,20 +1,25 @@
 package util;
 
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DbUtil {
-
-    private String dbUrl = "jdbc:mysql://localhost:3306/studentinfo?useUnicode=true&characterEncoding=UTF-8&useSSL=false";
-    private String dbUserName = "root";
-    private String dbPassword = "123321";
-    private String jdbcName = "com.mysql.jdbc.Driver";
-
     //获取数据库连接
     public Connection getCon() throws Exception {
-        Class.forName(jdbcName);
-        Connection con = DriverManager.getConnection(dbUrl, dbUserName, dbPassword);
+
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("src\\mysql.properties"));
+        //获取相关的值
+        String user = properties.getProperty("user");
+        String password = properties.getProperty("password");
+        String driver = properties.getProperty("driver");
+        String url = properties.getProperty("url");
+
+        Class.forName(driver);
+        Connection con = DriverManager.getConnection(url, user, password);
         return con;
     }
 
