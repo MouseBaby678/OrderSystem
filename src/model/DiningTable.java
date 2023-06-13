@@ -3,9 +3,14 @@ package model;
 public class DiningTable {
     int t_id;
     int status;
+    // status：0表示空闲，1表示占用
 
     public DiningTable(int t_id, int status) {
         this.t_id = t_id;
+        this.status = status;
+    }
+
+    public DiningTable(int status) {
         this.status = status;
     }
 

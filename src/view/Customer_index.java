@@ -1,5 +1,12 @@
 package view;
 
+import dao.CustomerDao;
+import dao.DiningTableDao;
+import model.Customer;
+import model.DiningTable;
+import util.DbUtil;
+import util.StringUtil;
+
 import java.awt.EventQueue;
 
 import javax.swing.*;
@@ -10,11 +17,15 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.ResultSet;
 
 public class Customer_index extends JFrame {
 
     private JPanel contentPane;
     private JTextField phone_textField;
+    private DbUtil dbUtil = new DbUtil();
+    private JComboBox table_comboBox;
 
     /**
      * Launch the application.
@@ -70,13 +81,13 @@ public class Customer_index extends JFrame {
         Confirm_Button.setBounds(202, 442, 286, 62);
         Confirm_Button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                order(Integer.parseInt(table_comboBox.getSelectedItem().toString()),phone_textField.getText());
 
             }
         });
         Confirm_Button.setFont(new Font("宋体", Font.PLAIN, 22));
 
-        JComboBox table_comboBox = new JComboBox();
+        table_comboBox = new JComboBox();
         table_comboBox.setFont(new Font("宋体", Font.PLAIN, 20));
         table_comboBox.setBounds(215, 121, 128, 48);
         table_comboBox.setToolTipText("1");
@@ -86,5 +97,42 @@ public class Customer_index extends JFrame {
         contentPane.add(phone_textField);
         contentPane.add(table_comboBox);
         contentPane.add(Confirm_Button);
+        fillTable();
+    }
+
+    private void order(int t_id, String phone_num){
+        if (StringUtil.isEmpty(phone_num)) {
+            JOptionPane.showMessageDialog(null, "电话不能为空!");
+            return;
+        }
+        Connection con = null;
+        Customer customer = new Customer(t_id,Integer.parseInt(phone_num));
+        try {
+            con = dbUtil.getCon();
+            int addnum = CustomerDao.add(con,customer);
+            int updatenum = DiningTableDao.update(con,new DiningTable(t_id,1));
+            if (addnum == 1 && updatenum == 1) {
+
+            } else {
+                JOptionPane.showMessageDialog(null, "失败!");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void fillTable(){
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+            ResultSet resultSet = DiningTableDao.list(con);
+            while (resultSet.next()){
+                table_comboBox.addItem(resultSet.getString("t_id"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
