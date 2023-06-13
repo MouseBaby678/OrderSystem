@@ -8,10 +8,15 @@ import java.awt.BorderLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import model.Order;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
@@ -25,8 +30,8 @@ public class OrderFrame {
     private JTable ordertable;
     private JTextField o_idTxt;
     private JTextField phone_numTxt;
-    private JTextField textField;
-    private JTable m_table;
+    private JTextField cost_moneyField;
+    private JTable menu_table;
 
     /**
      * Launch the application.
@@ -56,7 +61,7 @@ public class OrderFrame {
      */
     private void initialize() {
         frame = new JFrame();
-        frame.setTitle("订单页面");
+        frame.setTitle("\u8BA2\u5355\u9875\u9762");
         frame.setBounds(100, 100, 900, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -98,13 +103,13 @@ public class OrderFrame {
                                 .addGap(9))
         );
 
-        m_table = new JTable();
-        m_table.setFont(new Font("宋体", Font.PLAIN, 15));
-        m_table.setModel(new DefaultTableModel(
+        menu_table = new JTable();
+        menu_table.setFont(new Font("宋体", Font.PLAIN, 15));
+        menu_table.setModel(new DefaultTableModel(
                 new Object[][] {
                 },
                 new String[] {
-                        "已点菜品"
+                        "\u5DF2\u70B9\u83DC\u54C1"
                 }
         ) {
             boolean[] columnEditables = new boolean[] {
@@ -114,15 +119,15 @@ public class OrderFrame {
                 return columnEditables[column];
             }
         });
-        scrollPane_1.setViewportView(m_table);
+        scrollPane_1.setViewportView(menu_table);
 
         ordertable = new JTable();
-        ordertable.setFont(new Font("宋体", Font.PLAIN, 15));
+        ordertable.setFont(new Font("宋体", Font.PLAIN, 18));
         ordertable.setModel(new DefaultTableModel(
                 new Object[][] {
                 },
                 new String[] {
-                        "订单编号", "桌号", "顾客编号", "手机号", "消费金额"
+                        "\u8BA2\u5355\u7F16\u53F7", "\u684C\u53F7", "\u987E\u5BA2\u7F16\u53F7", "\u624B\u673A\u53F7", "\u6D88\u8D39\u91D1\u989D"
                 }
         ) {
             boolean[] columnEditables = new boolean[] {
@@ -134,32 +139,33 @@ public class OrderFrame {
         });
         scrollPane.setViewportView(ordertable);
 
-        JLabel lblNewLabel_2 = new JLabel("修改金额");
-        lblNewLabel_2.setFont(new Font("宋体", Font.PLAIN, 15));
+        JLabel lblNewLabel_2 = new JLabel("\u4FEE\u6539\u91D1\u989D");
+        lblNewLabel_2.setFont(new Font("宋体", Font.PLAIN, 18));
         lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 
-        textField = new JTextField();
-        textField.setColumns(10);
+        cost_moneyField = new JTextField();
+        cost_moneyField.setFont(new Font("宋体", Font.PLAIN, 18));
+        cost_moneyField.setColumns(10);
 
-        JButton btnNewButton_1 = new JButton("确认");
-        btnNewButton_1.setFont(new Font("宋体", Font.PLAIN, 15));
+        JButton confirmButton = new JButton("\u786E\u8BA4");
+        confirmButton.setFont(new Font("宋体", Font.PLAIN, 18));
 
-        JButton btnNewButton_2 = new JButton("就餐完成");
-        btnNewButton_2.setFont(new Font("宋体", Font.PLAIN, 15));
-        btnNewButton_2.setToolTipText("");
+        JButton completeButton = new JButton("\u5C31\u9910\u5B8C\u6210");
+        completeButton.setFont(new Font("宋体", Font.PLAIN, 18));
+        completeButton.setToolTipText("");
         GroupLayout gl_panel_1 = new GroupLayout(panel_1);
         gl_panel_1.setHorizontalGroup(
-                gl_panel_1.createParallelGroup(Alignment.TRAILING)
-                        .addGroup(Alignment.LEADING, gl_panel_1.createSequentialGroup()
+                gl_panel_1.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_panel_1.createSequentialGroup()
                                 .addGap(28)
                                 .addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(textField, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cost_moneyField, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18)
-                                .addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(confirmButton, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(ComponentPlacement.RELATED, 245, Short.MAX_VALUE)
-                                .addComponent(btnNewButton_2, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
-                                .addGap(123))
+                                .addComponent(completeButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+                                .addGap(103))
         );
         gl_panel_1.setVerticalGroup(
                 gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -167,29 +173,29 @@ public class OrderFrame {
                                 .addGap(27)
                                 .addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
                                         .addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(textField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnNewButton_1)
-                                        .addComponent(btnNewButton_2))
+                                        .addComponent(cost_moneyField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(confirmButton)
+                                        .addComponent(completeButton))
                                 .addContainerGap(29, Short.MAX_VALUE))
         );
         panel_1.setLayout(gl_panel_1);
 
-        JLabel lblNewLabel = new JLabel("订单编号");
-        lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 15));
+        JLabel lblNewLabel = new JLabel("\u8BA2\u5355\u7F16\u53F7");
+        lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 18));
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         o_idTxt = new JTextField();
         o_idTxt.setColumns(10);
 
-        JLabel lblNewLabel_1 = new JLabel("手机号");
-        lblNewLabel_1.setFont(new Font("宋体", Font.PLAIN, 15));
+        JLabel lblNewLabel_1 = new JLabel("\u624B\u673A\u53F7");
+        lblNewLabel_1.setFont(new Font("宋体", Font.PLAIN, 18));
         lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 
         phone_numTxt = new JTextField();
         phone_numTxt.setColumns(10);
 
-        JButton btnNewButton = new JButton("查询");
-        btnNewButton.setFont(new Font("宋体", Font.PLAIN, 15));
+        JButton selectButton = new JButton("\u67E5\u8BE2");
+        selectButton.setFont(new Font("宋体", Font.PLAIN, 18));
         GroupLayout gl_panel = new GroupLayout(panel);
         gl_panel.setHorizontalGroup(
                 gl_panel.createParallelGroup(Alignment.LEADING)
@@ -203,7 +209,7 @@ public class OrderFrame {
                                 .addPreferredGap(ComponentPlacement.RELATED)
                                 .addComponent(phone_numTxt, GroupLayout.PREFERRED_SIZE, 267, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18)
-                                .addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(selectButton, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(32, Short.MAX_VALUE))
         );
         gl_panel.setVerticalGroup(
@@ -213,7 +219,7 @@ public class OrderFrame {
                                 .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
                                         .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
                                                 .addComponent(phone_numTxt, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(selectButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
                                         .addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(o_idTxt, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE))
