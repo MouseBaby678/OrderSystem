@@ -39,16 +39,8 @@ public class Customer_index extends JFrame {
             //TODO exception
         }
         UIManager.put("RootPane.setupButtonVisible",false);
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Customer_index frame = new Customer_index();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        Customer_index frame = new Customer_index();
+        frame.setVisible(true);
     }
 
     /**
@@ -112,7 +104,7 @@ public class Customer_index extends JFrame {
             int addnum = CustomerDao.add(con,customer);
             int updatenum = DiningTableDao.update(con,new DiningTable(t_id,1));
             if (addnum == 1 && updatenum == 1) {
-
+                dispose();
             } else {
                 JOptionPane.showMessageDialog(null, "失败!");
             }
