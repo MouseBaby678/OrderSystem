@@ -1,5 +1,9 @@
 package view;
 
+import dao.DiningTableDao;
+import dao.MealDao;
+import util.DbUtil;
+
 import java.awt.EventQueue;
 
 import javax.swing.*;
@@ -7,17 +11,21 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
 
 public class Customer_order extends JFrame {
 
     private JPanel contentPane;
-
+    private DbUtil dbUtil= new DbUtil();
     private JTable Customer_order_table;
 
     /**
      * Launch the application.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         try
         {
             org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
@@ -26,22 +34,14 @@ public class Customer_order extends JFrame {
             //TODO exception
         }
         UIManager.put("RootPane.setupButtonVisible",false);
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Customer_order frame = new Customer_order();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        Customer_order frame = new Customer_order();
+        frame.setVisible(true);
     }
 
     /**
      * Create the frame.
      */
-    public Customer_order() {
+    public Customer_order() throws SQLException {
         setIconImage(Toolkit.getDefaultToolkit().getImage("img/菜谱.png"));
         setTitle("点餐界面");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,13 +87,37 @@ public class Customer_order extends JFrame {
                 }
         ) {
             Class[] columnTypes = new Class[] {
-                    String.class, Double.class, Boolean.class
+                    String.class, String.class, Boolean.class
             };
             public Class getColumnClass(int columnIndex) {
                 return columnTypes[columnIndex];
             }
         });
         Customer_order_scrollPane.setViewportView(Customer_order_table);
+        fillTable();
 
     }
+
+    private void fillTable() throws SQLException {
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+            ResultSet resultSet = MealDao.list(con);
+            DefaultTableModel dtm = (DefaultTableModel) this.Customer_order_table.getModel();
+            dtm.setRowCount(0);
+            while (resultSet.next()){
+                Vector v = new Vector<>();
+                v.add(resultSet.getString("meal_name"));
+                System.out.println(resultSet.getString("price").getClass());
+                v.add(resultSet.getString("price"));
+                dtm.addRow(v);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            dbUtil.closeCon(con);
+        }
+    }
+
+
 }

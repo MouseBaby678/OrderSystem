@@ -6,15 +6,28 @@ public class Order {
     int o_id;
     int t_id;
     int c_id;
-    String dish_name;
+    String phone_num;
     BigDecimal cost_money;
 
-    public Order(int o_id, int t_id, int c_id, String dish_name, BigDecimal cost_money) {
+    public Order(int o_id, int t_id, int c_id, String phone_num, BigDecimal cost_money) {
         this.o_id = o_id;
         this.t_id = t_id;
         this.c_id = c_id;
-        this.dish_name = dish_name;
+        this.phone_num = phone_num;
         this.cost_money = cost_money;
+    }
+
+    public Order(int t_id, int c_id, String phone_num, BigDecimal cost_money) {
+        this.t_id = t_id;
+        this.c_id = c_id;
+        this.phone_num = phone_num;
+        this.cost_money = cost_money;
+    }
+
+    public Order(int t_id, int c_id, String phone_num) {
+        this.t_id = t_id;
+        this.c_id = c_id;
+        this.phone_num = phone_num;
     }
 
     public int getO_id() {
@@ -41,19 +54,19 @@ public class Order {
         this.c_id = c_id;
     }
 
-    public String getDish_name() {
-        return dish_name;
-    }
-
-    public void setDish_name(String dish_name) {
-        this.dish_name = dish_name;
-    }
-
     public BigDecimal getCost_money() {
         return cost_money;
     }
 
     public void setCost_money(BigDecimal cost_money) {
         this.cost_money = cost_money;
+    }
+
+    public String getPhone_num() {
+        return phone_num;
+    }
+
+    public void setPhone_num(String phone_num) {
+        this.phone_num = phone_num;
     }
 }

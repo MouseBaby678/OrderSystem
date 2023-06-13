@@ -133,4 +133,16 @@ public class Customer_index extends JFrame {
         }
 
     }
+
+    private void addOrder(int t_id, int c_id, String phone_num) throws SQLException {
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            dbUtil.closeCon(con);
+        }
+    }
 }

@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 public class BusinessDao {
     public Business login(Connection con, Business business) throws Exception {
         Business resultBusiness = null;
-        String sql = "select * from ordersystem where username=? and password=?";
+        String sql = "select * from business where username=? and password=?";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, business.getUsername());
         pstmt.setString(2, business.getPassword());
