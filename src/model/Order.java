@@ -34,6 +34,10 @@ public class Order {
         return o_id;
     }
 
+    public Order(String phone_num) {
+        this.phone_num = phone_num;
+    }
+
     public void setO_id(int o_id) {
         this.o_id = o_id;
     }

@@ -2,6 +2,10 @@ package view;
 
 import dao.DiningTableDao;
 import dao.MealDao;
+import dao.OrderDao;
+import dao.Order_MealDao;
+import model.Meal;
+import model.Order;
 import util.DbUtil;
 
 import java.awt.EventQueue;
@@ -11,37 +15,43 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class Customer_order extends JFrame {
 
     private JPanel contentPane;
-    private DbUtil dbUtil= new DbUtil();
+    private static DbUtil dbUtil= new DbUtil();
     private JTable Customer_order_table;
 
     /**
      * Launch the application.
      */
-    public static void main(String[] args) throws SQLException {
-        try
-        {
-            org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
-
-        } catch(Exception e){
-            //TODO exception
-        }
-        UIManager.put("RootPane.setupButtonVisible",false);
-        Customer_order frame = new Customer_order();
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) throws SQLException {
+//        try
+//        {
+//            org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+//
+//        } catch(Exception e){
+//            //TODO exception
+//        }
+//        UIManager.put("RootPane.setupButtonVisible",false);
+//        Customer_order frame = new Customer_order(1);
+//        frame.setVisible(true);
+//    }
 
     /**
      * Create the frame.
      */
-    public Customer_order() throws SQLException {
+    public Customer_order(String phone_num) throws SQLException {
+        int o_id = getO_id(phone_num);
         setIconImage(Toolkit.getDefaultToolkit().getImage("img/菜谱.png"));
         setTitle("点餐界面");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,6 +84,29 @@ public class Customer_order extends JFrame {
         Meal_order_Button.setFont(new Font("宋体", Font.PLAIN, 33));
         Meal_order_Button.setBounds(307, 531, 232, 106);
         contentPane.add(Meal_order_Button);
+        Meal_order_Button.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Meal> list = listMeal();
+                for(Meal meal:list){
+                    Connection con = null;
+                    try {
+                        con = dbUtil.getCon();
+                        int m_id = get_Mid(meal.getMeal_name());
+                        Order_MealDao.add(con,o_id, m_id);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }finally {
+                        try {
+                            dbUtil.closeCon(con);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }
+            }
+        });
         JScrollPane Customer_order_scrollPane = new JScrollPane();
         Customer_order_scrollPane.setBounds(111, 127, 597, 357);
         contentPane.add(Customer_order_scrollPane);
@@ -102,13 +135,12 @@ public class Customer_order extends JFrame {
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            ResultSet resultSet = MealDao.list(con);
+            ResultSet resultSet = MealDao.list(con, new Meal());
             DefaultTableModel dtm = (DefaultTableModel) this.Customer_order_table.getModel();
             dtm.setRowCount(0);
             while (resultSet.next()){
                 Vector v = new Vector<>();
                 v.add(resultSet.getString("meal_name"));
-                System.out.println(resultSet.getString("price").getClass());
                 v.add(resultSet.getString("price"));
                 dtm.addRow(v);
             }
@@ -119,5 +151,47 @@ public class Customer_order extends JFrame {
         }
     }
 
+    private List<Meal> listMeal(){
+        List<Meal> list = new ArrayList<Meal>();
+        for(int i = 0; i< Customer_order_table.getRowCount(); i++){
+            if((Boolean) Customer_order_table.getValueAt(i,2)){
+                list.add(new Meal((String) Customer_order_table.getValueAt(i,0),
+                        BigDecimal.valueOf(Double.valueOf((String) Customer_order_table.getValueAt(i,1)) )));
+            }
+        }
+        return list;
+    }
+
+    private int getO_id(String phone_num) throws SQLException {
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+            ResultSet result = OrderDao.list(con,new Order(phone_num));
+            if (result.next()) {
+                return result.getInt("o_id");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            dbUtil.closeCon(con);
+        }
+        return 0;
+    };
+
+    private static int get_Mid(String meal_name) throws SQLException {
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+            ResultSet result = MealDao.list(con,new Meal(meal_name));
+            if (result.next()) {
+                return result.getInt("m_id");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            dbUtil.closeCon(con);
+        }
+        return 0;
+    };
 
 }

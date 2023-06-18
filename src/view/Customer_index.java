@@ -5,6 +5,7 @@ import dao.DiningTableDao;
 import dao.OrderDao;
 import model.Customer;
 import model.DiningTable;
+import model.Meal;
 import model.Order;
 import util.DbUtil;
 import util.StringUtil;
@@ -22,6 +23,7 @@ import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Customer_index extends JFrame {
 
@@ -115,6 +117,16 @@ public class Customer_index extends JFrame {
                 int addOrderNum = OrderDao.add(con, new Order(t_id, c_id, phone_num));
                 if(updateDiningTableNum == 1 && addOrderNum == 1){
                     dispose();
+                    try
+                    {
+                        org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+
+                    } catch(Exception e){
+                        //TODO exception
+                    }
+                    UIManager.put("RootPane.setupButtonVisible",false);
+                    Customer_order frame = new Customer_order(phone_num);
+                    frame.setVisible(true);
                 }
             }
         } catch (Exception e) {
@@ -137,8 +149,6 @@ public class Customer_index extends JFrame {
         }finally {
             dbUtil.closeCon(con);
         }
-
     }
-
 
 }

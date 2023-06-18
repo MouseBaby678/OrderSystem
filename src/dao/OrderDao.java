@@ -13,7 +13,7 @@ import model.Order;
 import util.StringUtil;
 
 public class OrderDao {
-    public ResultSet list(Connection con, Order order) throws SQLException {
+    public static ResultSet list(Connection con, Order order) throws SQLException {
         StringBuilder strb = new StringBuilder("SELECT * FROM `order` WHERE 1");
 
         if (order.getO_id() != 0) {
@@ -26,7 +26,7 @@ public class OrderDao {
         return pstmt.executeQuery();
     }
 
-    public int update(Connection con, Order order) throws SQLException {
+    public static int update(Connection con, Order order) throws SQLException {
         String sql = "UPDATE `order` SET cost_money = ? WHERE o_id = ?";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setBigDecimal(1, order.getCost_money());
@@ -36,7 +36,6 @@ public class OrderDao {
 
     public static int add(Connection con, Order order) throws SQLException {
         String sql = "insert into `order` (t_id, c_id, phone_num) values(?,?,?)";
-        System.out.println(sql);
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setInt(1, order.getT_id());
         pstmt.setInt(2, order.getC_id());

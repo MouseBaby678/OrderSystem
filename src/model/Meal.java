@@ -12,6 +12,14 @@ public class Meal {
         this.price = price;
     }
 
+    public Meal() {
+
+    }
+
+    public Meal(String meal_name) {
+        this.meal_name = meal_name;
+    }
+
     public int getM_id() {
         return m_id;
     }
