@@ -2,8 +2,10 @@ package view;
 
 import dao.CustomerDao;
 import dao.DiningTableDao;
+import dao.OrderDao;
 import model.Customer;
 import model.DiningTable;
+import model.Order;
 import util.DbUtil;
 import util.StringUtil;
 
@@ -75,7 +77,7 @@ public class Customer_index extends JFrame {
         Confirm_Button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    order(Integer.parseInt(table_comboBox.getSelectedItem().toString()),phone_textField.getText());
+                    startOrder(Integer.parseInt(table_comboBox.getSelectedItem().toString()),phone_textField.getText());
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -97,7 +99,7 @@ public class Customer_index extends JFrame {
         fillTable();
     }
 
-    private void order(int t_id, String phone_num) throws SQLException {
+    private void startOrder(int t_id, String phone_num) throws SQLException {
         if (StringUtil.isEmpty(phone_num)) {
             JOptionPane.showMessageDialog(null, "手机号不能为空!");
             return;
@@ -106,10 +108,14 @@ public class Customer_index extends JFrame {
         Customer customer = new Customer(t_id, phone_num);
         try {
             con = dbUtil.getCon();
-            int addnum = CustomerDao.add(con,customer);
-            int updatenum = DiningTableDao.update(con,new DiningTable(t_id,1));
-            if (addnum == 1 && updatenum == 1) {
-                dispose();
+            int addCustomNum = CustomerDao.add(con,customer);
+            if (addCustomNum == 1) {
+                int c_id = CustomerDao.list(con, phone_num).getC_id();
+                int updateDiningTableNum = DiningTableDao.update(con,new DiningTable(t_id,1));
+                int addOrderNum = OrderDao.add(con, new Order(t_id, c_id, phone_num));
+                if(updateDiningTableNum == 1 && addOrderNum == 1){
+                    dispose();
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -134,15 +140,5 @@ public class Customer_index extends JFrame {
 
     }
 
-    private void addOrder(int t_id, int c_id, String phone_num) throws SQLException {
-        Connection con = null;
-        try {
-            con = dbUtil.getCon();
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }finally {
-            dbUtil.closeCon(con);
-        }
-    }
 }

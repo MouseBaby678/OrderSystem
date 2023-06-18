@@ -16,6 +16,10 @@ public class Customer {
         this.phone_num = phone_num;
     }
 
+    public Customer() {
+
+    }
+
     public int getC_id() {
         return c_id;
     }
