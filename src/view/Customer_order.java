@@ -110,22 +110,27 @@ public class Customer_order extends JFrame {
 //                String message = "总价格：" + totalPrice.toString();
 //                JOptionPane.showMessageDialog(null, message);
                 BigDecimal totalPrice = calculateTotalPrice(list);
-
-
-                StringBuilder messageBuilder = new StringBuilder();
-                messageBuilder.append("菜品  价格\n");
-                for (Meal meal : list) {
-                    messageBuilder.append(meal.getMealName()).append(" ").append(meal.getPrice()).append("\n");
-                }
-                messageBuilder.append("\n总价格：").append(totalPrice.toString());
+                if (totalPrice.compareTo(BigDecimal.ZERO)==0){
+                    String message = "请选择菜品再下单。" ;
+                    JOptionPane.showMessageDialog(null, message);
+                }else {
+                    StringBuilder messageBuilder = new StringBuilder();
+                    messageBuilder.append("菜品  价格\n");
+                    for (Meal meal : list) {
+                        messageBuilder.append(meal.getMealName()).append(" ").append(meal.getPrice()).append("\n");
+                    }
+                    messageBuilder.append("\n总价格：").append(totalPrice.toString());
 
 
 //                JOptionPane.showMessageDialog(null, messageBuilder.toString());
-                int result = JOptionPane.showOptionDialog(null, messageBuilder.toString(), "提示", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"确定"}, null);
-                if (result == JOptionPane.OK_OPTION) {
-                    dispose();
+                    int result = JOptionPane.showOptionDialog(null, messageBuilder.toString(), "提示", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"确定"}, null);
+                    if (result == JOptionPane.OK_OPTION) {
+                        dispose();
 
+                    }
                 }
+
+
 
             }
         });
@@ -175,16 +180,24 @@ public class Customer_order extends JFrame {
         }
     }
 
-    private List<Meal> listMeal(){
+    private List<Meal> listMeal() {
         List<Meal> list = new ArrayList<Meal>();
-        for(int i = 0; i< Customer_order_table.getRowCount(); i++){
-            if((Boolean) Customer_order_table.getValueAt(i,2)){
-                list.add(new Meal((String) Customer_order_table.getValueAt(i,0),
-                        BigDecimal.valueOf(Double.valueOf((String) Customer_order_table.getValueAt(i,1)) )));
+        for (int i = 0; i < Customer_order_table.getRowCount(); i++) {
+            Object value = Customer_order_table.getValueAt(i, 2);
+            if (value != null && value instanceof Boolean && (Boolean) value) {
+                Object mealNameObj = Customer_order_table.getValueAt(i, 0);
+                Object priceObj = Customer_order_table.getValueAt(i, 1);
+                if (mealNameObj instanceof String && priceObj instanceof String) {
+                    String mealName = (String) mealNameObj;
+                    String priceStr = (String) priceObj;
+                    BigDecimal price = BigDecimal.valueOf(Double.parseDouble(priceStr));
+                    list.add(new Meal(mealName, price));
+                }
             }
         }
         return list;
     }
+
 
     private int getO_id(String phone_num) throws SQLException {
         Connection con = null;
