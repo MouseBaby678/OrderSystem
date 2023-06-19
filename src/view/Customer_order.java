@@ -1,12 +1,12 @@
 package view;
 
-import dao.DiningTableDao;
-import dao.MealDao;
-import dao.OrderDao;
-import dao.Order_MealDao;
+import dao.*;
+import model.Customer;
+import model.DiningTable;
 import model.Meal;
 import model.Order;
 import util.DbUtil;
+import util.StringUtil;
 
 import java.awt.EventQueue;
 
@@ -105,6 +105,28 @@ public class Customer_order extends JFrame {
                         }
                     }
                 }
+//                System.out.println(calculateTotalPrice(list));
+//                BigDecimal totalPrice = calculateTotalPrice(list);
+//                String message = "总价格：" + totalPrice.toString();
+//                JOptionPane.showMessageDialog(null, message);
+                BigDecimal totalPrice = calculateTotalPrice(list);
+
+
+                StringBuilder messageBuilder = new StringBuilder();
+                messageBuilder.append("菜品  价格\n");
+                for (Meal meal : list) {
+                    messageBuilder.append(meal.getMealName()).append(" ").append(meal.getPrice()).append("\n");
+                }
+                messageBuilder.append("\n总价格：").append(totalPrice.toString());
+
+
+//                JOptionPane.showMessageDialog(null, messageBuilder.toString());
+                int result = JOptionPane.showOptionDialog(null, messageBuilder.toString(), "提示", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"确定"}, null);
+                if (result == JOptionPane.OK_OPTION) {
+                    dispose();
+
+                }
+
             }
         });
         JScrollPane Customer_order_scrollPane = new JScrollPane();
@@ -112,6 +134,7 @@ public class Customer_order extends JFrame {
         contentPane.add(Customer_order_scrollPane);
 
         Customer_order_table = new JTable();
+
         Customer_order_table.setModel(new DefaultTableModel(
                 new Object[][] {
                 },
@@ -130,6 +153,7 @@ public class Customer_order extends JFrame {
         fillTable();
 
     }
+
 
     private void fillTable() throws SQLException {
         Connection con = null;
@@ -193,5 +217,53 @@ public class Customer_order extends JFrame {
         }
         return 0;
     };
+    private void show_check(int t_id, String phone_num) throws SQLException {
+        if (StringUtil.isEmpty(phone_num)) {
+            JOptionPane.showMessageDialog(null, "手机号不能为空!");
+            return;
+        }
+        Connection con = null;
+        Customer customer = new Customer(t_id, phone_num);
+        try {
+            con = dbUtil.getCon();
+            int addCustomNum = CustomerDao.add(con,customer);
+            if (addCustomNum == 1) {
+                int c_id = CustomerDao.list(con, phone_num).getC_id();
+                int updateDiningTableNum = DiningTableDao.update(con,new DiningTable(t_id,1));
+                int addOrderNum = OrderDao.add(con, new Order(t_id, c_id, phone_num));
+                if(updateDiningTableNum == 1 && addOrderNum == 1){
+                    dispose();
+                    try
+                    {
+                        org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+
+                    } catch(Exception e){
+                        //TODO exception
+                    }
+                    UIManager.put("RootPane.setupButtonVisible",false);
+                    Customer_order frame = new Customer_order(phone_num);
+                    frame.setVisible(true);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            dbUtil.closeCon(con);
+        }
+    }
+
+    private BigDecimal calculateTotalPrice(List<Meal> listMeal) {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
+        for (Meal meal : listMeal) {
+            BigDecimal price = meal.getPrice();
+            totalPrice = totalPrice.add(price);
+        }
+
+        return totalPrice;
+    }
+
+
+
 
 }
