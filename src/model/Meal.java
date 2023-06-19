@@ -43,4 +43,8 @@ public class Meal {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+    public String getMealName() {
+        return meal_name;
+    }
 }
