@@ -60,24 +60,8 @@ public class MealFrame extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("菜名：");
-        lblNewLabel.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        lblNewLabel.setBounds(62, 23, 55, 35);
-        contentPane.add(lblNewLabel);
-
-        searchTextField = new JTextField();
-        searchTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        searchTextField.setBounds(125, 27, 136, 30);
-        contentPane.add(searchTextField);
-        searchTextField.setColumns(10);
-
-        JButton searchButton = new JButton("查询");
-        searchButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
-        searchButton.setBounds(275, 27, 100, 30);
-        contentPane.add(searchButton);
-
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(62, 69, 312, 214);
+        scrollPane.setBounds(62, 40, 312, 240);
         contentPane.add(scrollPane);
 
         table = new JTable();

@@ -52,7 +52,7 @@ public class Customer_order extends JFrame {
      */
     public Customer_order(String phone_num) throws SQLException {
         int o_id = getO_id(phone_num);
-        setIconImage(Toolkit.getDefaultToolkit().getImage("img/菜谱.png"));
+        setIconImage(Toolkit.getDefaultToolkit().getImage("src/img/菜谱.png"));
         setTitle("点餐界面");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(600, 200, 853, 735);
@@ -64,19 +64,19 @@ public class Customer_order extends JFrame {
 
         JLabel Meal_name_Label = new JLabel("菜名");
         Meal_name_Label.setFont(new Font("宋体", Font.PLAIN, 29));
-        Meal_name_Label.setIcon(new ImageIcon("img/菜菜.png"));
+        Meal_name_Label.setIcon(new ImageIcon("src/img/菜菜.png"));
         Meal_name_Label.setBounds(122, 29, 153, 88);
         contentPane.add(Meal_name_Label);
 
         JLabel Meal_price_Label = new JLabel("价格");
         Meal_price_Label.setFont(new Font("宋体", Font.PLAIN, 29));
-        Meal_price_Label.setIcon(new ImageIcon("img/钱.png"));
+        Meal_price_Label.setIcon(new ImageIcon("src/img/钱.png"));
         Meal_price_Label.setBounds(386, 29, 153, 88);
         contentPane.add(Meal_price_Label);
 
         JLabel Meal_choose_Label = new JLabel("选择");
         Meal_choose_Label.setFont(new Font("宋体", Font.PLAIN, 29));
-        Meal_choose_Label.setIcon(new ImageIcon("img/对号.png"));
+        Meal_choose_Label.setIcon(new ImageIcon("src/img/对号.png"));
         Meal_choose_Label.setBounds(626, 29, 153, 88);
         contentPane.add(Meal_choose_Label);
 
