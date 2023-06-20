@@ -158,7 +158,7 @@ public class MealFrame extends JFrame {
         priceTextField.setColumns(10);
         priceTextField.setBounds(167, 361, 136, 23);
         contentPane.add(priceTextField);
-
+        fillTable();
     }
     private void fillTable() {
         DefaultTableModel dtm = (DefaultTableModel) table.getModel();
@@ -169,7 +169,7 @@ public class MealFrame extends JFrame {
             ResultSet resultSet = MealDao.list(con, new Meal());
 
             while (resultSet.next()) {
-                String mealName = resultSet.getString("mealName");
+                String mealName = resultSet.getString("meal_name");
                 String price = resultSet.getString("price");
 
                 Object[] rowData = {mealName, price};
