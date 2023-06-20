@@ -55,7 +55,7 @@ public class Customer_index extends JFrame {
         setIconImage(Toolkit.getDefaultToolkit().getImage("img/餐厅.png"));
         setTitle("点餐界面");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 760, 632);
+        setBounds(700, 200, 760, 632);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 

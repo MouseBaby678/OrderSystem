@@ -2,9 +2,7 @@ package view;
 
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -58,8 +56,9 @@ public class OrderFrame {
     public OrderFrame() throws SQLException {
         frame = new JFrame();
         frame.setTitle("订单页面");
-        frame.setBounds(100, 100, 900, 600);
+        frame.setBounds(550, 200, 900, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
 
         JScrollPane scrollPane = new JScrollPane();
 
@@ -205,6 +204,16 @@ public class OrderFrame {
             }
         });
 
+        JButton mealButton = new JButton("\u83DC\u5355\u7BA1\u7406");
+        mealButton.setToolTipText("");
+        mealButton.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        mealButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MealFrame mealFrame = new MealFrame();
+                mealFrame.setVisible(true);
+            }
+        });
         GroupLayout gl_panel_1 = new GroupLayout(panel_1);
         gl_panel_1.setHorizontalGroup(
                 gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -215,19 +224,27 @@ public class OrderFrame {
                                 .addComponent(cost_moneyField, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18)
                                 .addComponent(confirmButton, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
-                                .addGap(167)
+                                .addGap(104)
                                 .addComponent(completeButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(181, Short.MAX_VALUE))
+                                .addPreferredGap(ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                                .addComponent(mealButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+                                .addGap(27))
         );
         gl_panel_1.setVerticalGroup(
                 gl_panel_1.createParallelGroup(Alignment.LEADING)
                         .addGroup(gl_panel_1.createSequentialGroup()
-                                .addGap(27)
-                                .addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cost_moneyField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(confirmButton)
-                                        .addComponent(completeButton))
+                                .addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+                                        .addGroup(gl_panel_1.createSequentialGroup()
+                                                .addGap(27)
+                                                .addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+                                                        .addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(cost_moneyField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(confirmButton)))
+                                        .addGroup(gl_panel_1.createSequentialGroup()
+                                                .addGap(26)
+                                                .addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+                                                        .addComponent(completeButton)
+                                                        .addComponent(mealButton, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))))
                                 .addContainerGap(29, Short.MAX_VALUE))
         );
         panel_1.setLayout(gl_panel_1);

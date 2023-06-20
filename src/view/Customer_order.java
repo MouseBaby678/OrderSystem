@@ -55,7 +55,7 @@ public class Customer_order extends JFrame {
         setIconImage(Toolkit.getDefaultToolkit().getImage("img/菜谱.png"));
         setTitle("点餐界面");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 853, 735);
+        setBounds(600, 200, 853, 735);
         contentPane = new JPanel();
         contentPane.setBorder(null);
 

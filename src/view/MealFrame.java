@@ -1,24 +1,24 @@
 package view;
 
-        import dao.MealDao;
-        import model.Meal;
-        import util.DbUtil;
-        import util.StringUtil;
+import dao.MealDao;
+import model.Meal;
+import util.DbUtil;
+import util.StringUtil;
 
-        import java.awt.EventQueue;
+import java.awt.EventQueue;
 
-        import javax.swing.*;
-        import javax.swing.border.EmptyBorder;
-        import java.awt.Font;
-        import java.awt.event.ActionEvent;
-        import java.awt.event.ActionListener;
-        import java.awt.event.MouseEvent;
-        import java.awt.event.MouseListener;
-        import java.math.BigDecimal;
-        import java.sql.Connection;
-        import java.sql.ResultSet;
-        import java.sql.SQLException;
-        import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
 
 public class MealFrame extends JFrame {
 
@@ -54,25 +54,25 @@ public class MealFrame extends JFrame {
     public MealFrame() {
         setTitle("菜品管理");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 450, 550);
+        setBounds(750, 200, 450, 550);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
         JLabel lblNewLabel = new JLabel("菜名：");
-        lblNewLabel.setFont(new Font("微软雅黑", Font.PLAIN, 16));
-        lblNewLabel.setBounds(62, 23, 53, 35);
+        lblNewLabel.setFont(new Font("微软雅黑", Font.PLAIN, 18));
+        lblNewLabel.setBounds(62, 23, 55, 35);
         contentPane.add(lblNewLabel);
 
         searchTextField = new JTextField();
-        searchTextField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
-        searchTextField.setBounds(118, 30, 136, 23);
+        searchTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
+        searchTextField.setBounds(125, 27, 136, 30);
         contentPane.add(searchTextField);
         searchTextField.setColumns(10);
 
         JButton searchButton = new JButton("查询");
-        searchButton.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        searchButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         searchButton.setBounds(275, 27, 100, 30);
         contentPane.add(searchButton);
 
@@ -81,7 +81,7 @@ public class MealFrame extends JFrame {
         contentPane.add(scrollPane);
 
         table = new JTable();
-        table.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        table.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         table.setModel(new DefaultTableModel(
                 new Object[][]{
                 },
@@ -89,7 +89,8 @@ public class MealFrame extends JFrame {
                         "菜名", "价格"
                 }
         ));
-        table.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        table.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        table.setRowHeight(30);
         scrollPane.setViewportView(table);
         table.addMouseListener(new MouseListener() {
             @Override
@@ -119,7 +120,7 @@ public class MealFrame extends JFrame {
         });
 
         deleteButton = new JButton("删除");
-        deleteButton.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        deleteButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         deleteButton.setBounds(293, 422, 97, 31);
         contentPane.add(deleteButton);
         deleteButton.addActionListener(new ActionListener() {
@@ -174,7 +175,7 @@ public class MealFrame extends JFrame {
 
 
         addButton = new JButton("添加");
-        addButton.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        addButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         addButton.setBounds(49, 422, 100, 31);
         contentPane.add(addButton);
         addButton.addActionListener(new ActionListener() {
@@ -213,7 +214,7 @@ public class MealFrame extends JFrame {
         });
 
         updateButton = new JButton("修改");
-        updateButton.setFont(new Font("微软雅黑", Font.PLAIN, 16));
+        updateButton.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         updateButton.setBounds(171, 422, 100, 31);
         contentPane.add(updateButton);
         updateButton.addActionListener(new ActionListener() {
@@ -262,25 +263,25 @@ public class MealFrame extends JFrame {
 
 
         JLabel lblNewLabel_1 = new JLabel("菜名：");
-        lblNewLabel_1.setFont(new Font("微软雅黑", Font.PLAIN, 16));
-        lblNewLabel_1.setBounds(90, 310, 53, 35);
+        lblNewLabel_1.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        lblNewLabel_1.setBounds(90, 316, 67, 29);
         contentPane.add(lblNewLabel_1);
 
         mael_nameTextField = new JTextField();
-        mael_nameTextField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        mael_nameTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         mael_nameTextField.setColumns(10);
-        mael_nameTextField.setBounds(167, 316, 136, 23);
+        mael_nameTextField.setBounds(167, 316, 136, 29);
         contentPane.add(mael_nameTextField);
 
         JLabel lblNewLabel_1_1 = new JLabel("价格：");
-        lblNewLabel_1_1.setFont(new Font("微软雅黑", Font.PLAIN, 16));
-        lblNewLabel_1_1.setBounds(90, 355, 53, 35);
+        lblNewLabel_1_1.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        lblNewLabel_1_1.setBounds(90, 355, 67, 41);
         contentPane.add(lblNewLabel_1_1);
 
         priceTextField = new JTextField();
-        priceTextField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        priceTextField.setFont(new Font("微软雅黑", Font.PLAIN, 18));
         priceTextField.setColumns(10);
-        priceTextField.setBounds(167, 361, 136, 23);
+        priceTextField.setBounds(167, 361, 136, 30);
         contentPane.add(priceTextField);
         fillTable();
     }
