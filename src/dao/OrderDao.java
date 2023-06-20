@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Customer;
+import model.Meal;
 import model.Order;
 import util.StringUtil;
 
@@ -22,6 +23,7 @@ public class OrderDao {
         if (StringUtil.isNotEmpty(order.getPhone_num())) {
             strb.append(" AND phone_num = ").append(order.getPhone_num());
         }
+        System.out.println(strb);
         PreparedStatement pstmt = con.prepareStatement(strb.toString());
         return pstmt.executeQuery();
     }
@@ -42,4 +44,31 @@ public class OrderDao {
         pstmt.setString(3, order.getPhone_num());
         return pstmt.executeUpdate();
     }
+    public static List<String> getMealNamesForOrder(Connection con, int orderId) throws SQLException {
+        List<String> mealNames = new ArrayList<>();
+
+        // Prepare the SQL query to retrieve meal names for the given order
+        String sql = "SELECT meal_name FROM meal JOIN order_meal ON meal.m_id = order_meal.m_id WHERE order_meal.o_id = ?";
+
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setInt(1, orderId);
+
+        ResultSet rs = pstmt.executeQuery();
+
+        // Retrieve meal names from the result set
+        while (rs.next()) {
+            String mealName = rs.getString("meal_name");
+            mealNames.add(mealName);
+        }
+
+        rs.close();
+        pstmt.close();
+        System.out.println(mealNames);
+        return mealNames;
+    }
+
+
+
+
 }
+

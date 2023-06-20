@@ -1,28 +1,26 @@
 package view;
 
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import model.Order;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JLabel;
-import javax.swing.GroupLayout;
+import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
+
+import dao.DiningTableDao;
+import dao.OrderDao;
+import model.DiningTable;
+import model.Meal;
+import model.Order;
+import util.DbUtil;
+import util.StringUtil;
 
 public class OrderFrame {
 
@@ -32,6 +30,7 @@ public class OrderFrame {
     private JTextField phone_numTxt;
     private JTextField cost_moneyField;
     private JTable menu_table;
+    private DbUtil dbUtil = new DbUtil();
 
     /**
      * Launch the application.
@@ -53,16 +52,9 @@ public class OrderFrame {
     /**
      * Create the application.
      */
-    public OrderFrame() {
-        initialize();
-    }
-
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initialize() {
+    public OrderFrame() throws SQLException {
         frame = new JFrame();
-        frame.setTitle("\u8BA2\u5355\u9875\u9762");
+        frame.setTitle("订单页面");
         frame.setBounds(100, 100, 900, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -74,6 +66,7 @@ public class OrderFrame {
 
         JScrollPane scrollPane_1 = new JScrollPane();
         GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+        frame.getContentPane().setLayout(groupLayout);
         groupLayout.setHorizontalGroup(
                 groupLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(groupLayout.createSequentialGroup()
@@ -107,15 +100,16 @@ public class OrderFrame {
         menu_table = new JTable();
         menu_table.setFont(new Font("宋体", Font.PLAIN, 15));
         menu_table.setModel(new DefaultTableModel(
-                new Object[][] {
+                new Object[][]{
                 },
-                new String[] {
-                        "\u5DF2\u70B9\u83DC\u54C1"
+                new String[]{
+                        "已点菜品"
                 }
         ) {
-            boolean[] columnEditables = new boolean[] {
+            boolean[] columnEditables = new boolean[]{
                     false
             };
+
             public boolean isCellEditable(int row, int column) {
                 return columnEditables[column];
             }
@@ -125,22 +119,23 @@ public class OrderFrame {
         ordertable = new JTable();
         ordertable.setFont(new Font("宋体", Font.PLAIN, 18));
         ordertable.setModel(new DefaultTableModel(
-                new Object[][] {
+                new Object[][]{
                 },
-                new String[] {
-                        "\u8BA2\u5355\u7F16\u53F7", "\u684C\u53F7", "\u987E\u5BA2\u7F16\u53F7", "\u624B\u673A\u53F7", "\u6D88\u8D39\u91D1\u989D"
+                new String[]{
+                        "订单编号", "桌号", "顾客编号", "手机号", "消费金额"
                 }
         ) {
-            boolean[] columnEditables = new boolean[] {
+            boolean[] columnEditables = new boolean[]{
                     false, false, false, false, false
             };
+
             public boolean isCellEditable(int row, int column) {
                 return columnEditables[column];
             }
         });
         scrollPane.setViewportView(ordertable);
 
-        JLabel lblNewLabel_2 = new JLabel("\u4FEE\u6539\u91D1\u989D");
+        JLabel lblNewLabel_2 = new JLabel("修改金额");
         lblNewLabel_2.setFont(new Font("宋体", Font.PLAIN, 18));
         lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -148,12 +143,37 @@ public class OrderFrame {
         cost_moneyField.setFont(new Font("宋体", Font.PLAIN, 18));
         cost_moneyField.setColumns(10);
 
-        JButton confirmButton = new JButton("\u786E\u8BA4");
+        JButton confirmButton = new JButton("确认");
         confirmButton.setFont(new Font("宋体", Font.PLAIN, 18));
+        confirmButton.addActionListener(e -> {
+            try {
+                updateOrder();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        });
 
-        JButton completeButton = new JButton("\u5C31\u9910\u5B8C\u6210");
+        JButton completeButton = new JButton("就餐完成");
         completeButton.setFont(new Font("宋体", Font.PLAIN, 18));
         completeButton.setToolTipText("");
+        completeButton.addActionListener(e -> {
+            try {
+                free();
+            }catch (SQLException e1){
+                e1.printStackTrace();
+            }
+        });
+
+        JButton meal = new JButton("\u67E5\u770B\u83DC\u54C1");
+        meal.setFont(new Font("宋体", Font.PLAIN, 18));
+        meal.addActionListener(e -> {
+            try {
+                fillMenuTable();
+            }catch (SQLException e1){
+                e1.printStackTrace();
+            }
+        });
+
         GroupLayout gl_panel_1 = new GroupLayout(panel_1);
         gl_panel_1.setHorizontalGroup(
                 gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -164,9 +184,11 @@ public class OrderFrame {
                                 .addComponent(cost_moneyField, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18)
                                 .addComponent(confirmButton, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(ComponentPlacement.RELATED, 245, Short.MAX_VALUE)
+                                .addGap(167)
                                 .addComponent(completeButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-                                .addGap(103))
+                                .addPreferredGap(ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                                .addComponent(meal)
+                                .addGap(24))
         );
         gl_panel_1.setVerticalGroup(
                 gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -176,28 +198,37 @@ public class OrderFrame {
                                         .addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cost_moneyField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(confirmButton)
-                                        .addComponent(completeButton))
+                                        .addComponent(completeButton)
+                                        .addComponent(meal))
                                 .addContainerGap(29, Short.MAX_VALUE))
         );
         panel_1.setLayout(gl_panel_1);
 
-        JLabel lblNewLabel = new JLabel("\u8BA2\u5355\u7F16\u53F7");
+        JLabel lblNewLabel = new JLabel("订单编号");
         lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 18));
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         o_idTxt = new JTextField();
         o_idTxt.setColumns(10);
 
-        JLabel lblNewLabel_1 = new JLabel("\u624B\u673A\u53F7");
+        JLabel lblNewLabel_1 = new JLabel("手机号");
         lblNewLabel_1.setFont(new Font("宋体", Font.PLAIN, 18));
         lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 
         phone_numTxt = new JTextField();
         phone_numTxt.setColumns(10);
 
-        JButton selectButton = new JButton("\u67E5\u8BE2");
+        JButton selectButton = new JButton("查询");
         selectButton.setFont(new Font("宋体", Font.PLAIN, 18));
+        selectButton.addActionListener(e -> {
+            try {
+                searchOrder();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        });
         GroupLayout gl_panel = new GroupLayout(panel);
+        panel.setLayout(gl_panel);
         gl_panel.setHorizontalGroup(
                 gl_panel.createParallelGroup(Alignment.LEADING)
                         .addGroup(gl_panel.createSequentialGroup()
@@ -226,7 +257,176 @@ public class OrderFrame {
                                         .addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap(33, Short.MAX_VALUE))
         );
-        panel.setLayout(gl_panel);
         frame.getContentPane().setLayout(groupLayout);
+        fillTable();
+        fillMenuTable();
+    }
+
+    /**
+     * Initialize the contents of the frame.
+     */
+
+    private void fillTable() throws SQLException {
+        Connection con = null;
+        Order order = new Order();
+        try {
+            con = dbUtil.getCon();
+            ResultSet resultSet = OrderDao.list(con, order);
+            DefaultTableModel model = (DefaultTableModel) ordertable.getModel();
+            while (resultSet.next()) {
+                Vector<Object> rowData = new Vector<>();
+                rowData.add(resultSet.getInt("o_id"));
+                rowData.add(resultSet.getInt("t_id"));
+                rowData.add(resultSet.getInt("c_id"));
+                rowData.add(resultSet.getString("phone_num"));
+                rowData.add(resultSet.getDouble("cost_money"));
+                model.addRow(rowData);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbUtil.closeCon(con);
+        }
+    }
+
+    private void searchOrder() throws SQLException {
+        Connection con = null;
+        Order order = new Order();
+        String o_id = o_idTxt.getText();
+        String phone_num = phone_numTxt.getText();
+        try {
+            con = dbUtil.getCon();
+            if (!o_id.isEmpty()) {
+                order.setO_id(Integer.parseInt(o_id));
+            }
+            if (!phone_num.isEmpty()) {
+                order.setPhone_num(phone_num);
+            }
+            ResultSet resultSet = OrderDao.list(con, order);
+            DefaultTableModel model = (DefaultTableModel) ordertable.getModel();
+            model.setRowCount(0); // Clear the existing table data
+            clearInputFields();
+            while (resultSet.next()) {
+                Vector<Object> rowData = new Vector<>();
+                rowData.add(resultSet.getInt("o_id"));
+                rowData.add(resultSet.getInt("t_id"));
+                rowData.add(resultSet.getInt("c_id"));
+                rowData.add(resultSet.getString("phone_num"));
+                rowData.add(resultSet.getDouble("cost_money"));
+                model.addRow(rowData);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbUtil.closeCon(con);
+        }
+    }
+
+    private void updateOrder() throws SQLException {
+        Connection con = null;
+        Order order = new Order();
+        String cost_money = cost_moneyField.getText();
+        try {
+            con = dbUtil.getCon();
+            if (!cost_money.isEmpty()) {
+                order.setCost_money(BigDecimal.valueOf(Double.parseDouble(cost_money)));
+            } else {
+                JOptionPane.showMessageDialog(null, "请选择要修改的金额", "提示", JOptionPane.INFORMATION_MESSAGE);
+                return; // No value entered, do not update
+            }
+            int selectedRowIndex = ordertable.getSelectedRow();
+            if (selectedRowIndex == -1) {
+                JOptionPane.showMessageDialog(null, "请选择要修改的订单", "提示", JOptionPane.INFORMATION_MESSAGE);
+                return; // No row selected, do not update
+            }
+            int o_id = (int) ordertable.getValueAt(selectedRowIndex, 0);
+            order.setO_id(o_id);
+            int affectedRows = OrderDao.update(con, order);
+            if (affectedRows > 0) {
+                // Update successful
+                DefaultTableModel model = (DefaultTableModel) ordertable.getModel();
+                model.setRowCount(0);
+                fillTable(); // Refresh the table with updated data
+                clearInputFields();
+            } else {
+                // Update failed
+                System.out.println("Update failed.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbUtil.closeCon(con);
+        }
+    }
+
+    private void free() throws SQLException {
+
+        Connection con = null;
+        //diningTable.setStatus(0);
+        try {
+            con = dbUtil.getCon();
+            int selectedRowIndex = ordertable.getSelectedRow();
+            if (selectedRowIndex == -1) {
+                JOptionPane.showMessageDialog(null, "请选择完成就餐的订单", "提示", JOptionPane.INFORMATION_MESSAGE);
+                return; // No row selected, do not update
+            }
+            int c_id = (int) ordertable.getValueAt(selectedRowIndex, 1);
+            DiningTable diningTable = new DiningTable(c_id,1);
+            diningTable.setStatus(0);
+            int rowsAffected = DiningTableDao.update(con, diningTable);
+            if (rowsAffected > 0) {
+                // 更新成功
+                System.out.println("就餐完成");
+                JOptionPane.showMessageDialog(null, "就餐完成", "提示", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // 更新失败
+                System.out.println("状态更新失败");
+            }
+
+            // 关闭连接
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbUtil.closeCon(con);
+        }
+    }
+
+    private void fillMenuTable() throws SQLException {
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+            int selectedRowIndex = ordertable.getSelectedRow();
+            if (selectedRowIndex == -1) {
+                JOptionPane.showMessageDialog(null, "请选择订单", "提示", JOptionPane.INFORMATION_MESSAGE);
+                return; // No row selected, do not update
+            }
+            int o_id = (int) ordertable.getValueAt(selectedRowIndex, 0);
+
+            System.out.println(o_id);
+            // 调用OrderDao中的getMealNamesForOrder方法获取订单的菜名列表
+            List<String> mealNames = OrderDao.getMealNamesForOrder(con, o_id);
+
+            DefaultTableModel model = (DefaultTableModel) menu_table.getModel();
+            model.setRowCount(0); // 清空原有数据
+
+            // 将菜名添加到表格中
+            for (String mealName : mealNames) {
+                Vector<Object> rowData = new Vector<>();
+                rowData.add(mealName);
+                model.addRow(rowData);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbUtil.closeCon(con);
+        }
+
+    }
+
+    private void clearInputFields() {
+        o_idTxt.setText("");
+        phone_numTxt.setText("");
+        cost_moneyField.setText("");
     }
 }
+
