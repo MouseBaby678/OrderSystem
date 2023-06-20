@@ -25,7 +25,7 @@ public class MealDao {
         return pstmt.executeUpdate();
     }
 
-    public static int add(Connection con, Meal meal) throws SQLException {
+    public static int insert(Connection con, Meal meal) throws SQLException {
         String sql = "INSERT INTO meal (meal_name, price) VALUES (?, ?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, meal.getMeal_name());
@@ -39,5 +39,26 @@ public class MealDao {
         pstmt.setBigDecimal(2, meal.getPrice());
         pstmt.setString(3, meal.getMeal_name());
         return pstmt.executeUpdate();
+    }
+    public static boolean hasReferences(Connection con, String mealName) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM other_table WHERE meal_name = ?";
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setString(1, mealName);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    return count > 0;
+                }
+            }
+        }
+        return false;
+    }
+    public static int updateStatus(Connection con, String mealName, boolean isDeleted) throws SQLException {
+        String sql = "UPDATE meal SET is_deleted = ? WHERE meal_name = ?";
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setBoolean(1, isDeleted);
+            pstmt.setString(2, mealName);
+            return pstmt.executeUpdate();
+        }
     }
 }
