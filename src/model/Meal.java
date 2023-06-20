@@ -6,6 +6,7 @@ public class Meal {
     int m_id;
     String meal_name;
     BigDecimal price;
+    int is_deleted;
 
     public Meal(String meal_name, BigDecimal price) {
         this.meal_name = meal_name;
@@ -14,6 +15,18 @@ public class Meal {
 
     public Meal() {
 
+    }
+
+    public Meal(int is_deleted) {
+        this.is_deleted = is_deleted;
+    }
+
+    public int getIs_deleted() {
+        return is_deleted;
+    }
+
+    public void setIs_deleted(int is_deleted) {
+        this.is_deleted = is_deleted;
     }
 
     public Meal(String meal_name) {

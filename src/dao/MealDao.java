@@ -10,9 +10,9 @@ import java.sql.SQLException;
 
 public class MealDao {
     public static ResultSet list(Connection con, Meal meal) throws SQLException {
-        StringBuilder sql = new StringBuilder("select * from meal ");
+        StringBuilder sql = new StringBuilder("select * from meal where is_deleted = 0");
         if(StringUtil.isNotEmpty(meal.getMeal_name())){
-            sql.append("where meal_name = ").append(meal.getMeal_name());
+            sql.append(" and meal_name = ").append(meal.getMeal_name());
         }
         PreparedStatement pstmt = con.prepareStatement(sql.toString());
         return pstmt.executeQuery();
@@ -41,7 +41,7 @@ public class MealDao {
         return pstmt.executeUpdate();
     }
     public static boolean hasReferences(Connection con, String mealName) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM other_table WHERE meal_name = ?";
+        String sql = "SELECT COUNT(*) FROM meal,order_meal WHERE meal.m_id = order_meal.m_id AND meal_name = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, mealName);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -53,11 +53,12 @@ public class MealDao {
         }
         return false;
     }
-    public static int updateStatus(Connection con, String mealName, boolean isDeleted) throws SQLException {
+    public static int updateStatus(Connection con, String mealName, int isDeleted) throws SQLException {
         String sql = "UPDATE meal SET is_deleted = ? WHERE meal_name = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setBoolean(1, isDeleted);
+            pstmt.setInt(1, isDeleted);
             pstmt.setString(2, mealName);
+            System.out.println(sql);
             return pstmt.executeUpdate();
         }
     }

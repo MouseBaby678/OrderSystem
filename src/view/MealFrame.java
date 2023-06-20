@@ -111,7 +111,7 @@ public class MealFrame extends JFrame {
                     // Check if the meal has associated foreign key references
                     if (MealDao.hasReferences(con, mealName)) {
                         // Update the status of the meal to indicate it is deleted
-                        int num = MealDao.updateStatus(con, mealName, false);
+                        int num = MealDao.updateStatus(con, mealName, 1);
                         if (num == 1) {
                             JOptionPane.showMessageDialog(null, "删除成功!");
                             mealNameTextField.setText("");
@@ -122,7 +122,7 @@ public class MealFrame extends JFrame {
                         }
                     } else {
                         // No associated foreign key references, delete the meal directly
-                        int num = MealDao.delete(con, new Meal());
+                        int num = MealDao.delete(con, new Meal(mealName));
                         if (num == 1) {
                             JOptionPane.showMessageDialog(null, "删除成功!");
                             mealNameTextField.setText("");
