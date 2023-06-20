@@ -103,18 +103,34 @@ public class MealFrame extends JFrame {
                     JOptionPane.showMessageDialog(null, "请选择要删除的菜品!");
                     return;
                 }
-                String meal_name = (String) table.getValueAt(selectedRow, 0);
+                String mealName = (String) table.getValueAt(selectedRow, 0);
                 Connection con = null;
                 try {
                     con = dbUtil.getCon();
-                    int num = MealDao.delete(con, new Meal(meal_name));
-                    if (num == 1) {
-                        JOptionPane.showMessageDialog(null, "删除成功!");
-                        mealNameTextField.setText("");
-                        priceTextField.setText("");
-                        fillTable();
+
+                    // Check if the meal has associated foreign key references
+                    if (MealDao.hasReferences(con, mealName)) {
+                        // Update the status of the meal to indicate it is deleted
+                        int num = MealDao.updateStatus(con, mealName, false);
+                        if (num == 1) {
+                            JOptionPane.showMessageDialog(null, "删除成功!");
+                            mealNameTextField.setText("");
+                            priceTextField.setText("");
+                            fillTable();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "删除失败!");
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "删除失败!");
+                        // No associated foreign key references, delete the meal directly
+                        int num = MealDao.delete(con, new Meal());
+                        if (num == 1) {
+                            JOptionPane.showMessageDialog(null, "删除成功!");
+                            mealNameTextField.setText("");
+                            priceTextField.setText("");
+                            fillTable();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "删除失败!");
+                        }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -125,9 +141,9 @@ public class MealFrame extends JFrame {
                         ex.printStackTrace();
                     }
                 }
-
             }
         });
+
 
         addButton = new JButton("添加");
         addButton.setFont(new Font("微软雅黑", Font.PLAIN, 16));
@@ -151,7 +167,7 @@ public class MealFrame extends JFrame {
                     meal.setMeal_name(mealName);
                     meal.setPrice(new BigDecimal(price));
 
-                    MealDao.add(con, meal);
+                    MealDao.insert(con, meal);
                     JOptionPane.showMessageDialog(null, "添加成功!");
                     mael_nameTextField.setText("");
                     priceTextField.setText("");
