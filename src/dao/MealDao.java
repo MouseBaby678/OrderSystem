@@ -24,20 +24,4 @@ public class MealDao {
         pstmt.setString(1, meal.getMeal_name());
         return pstmt.executeUpdate();
     }
-
-    public static int insert(Connection con, Meal meal) throws SQLException {
-        String sql = "INSERT INTO meal (meal_name, price) VALUES (?, ?)";
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, meal.getMeal_name());
-        pstmt.setBigDecimal(2, meal.getPrice());
-        return pstmt.executeUpdate();
-    }
-    public static int update(Connection con, Meal meal) throws SQLException {
-        String sql = "UPDATE meal SET meal_name=?, price=? WHERE meal_name=?";
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setString(1, meal.getMeal_name());
-        pstmt.setBigDecimal(2, meal.getPrice());
-        pstmt.setString(3, meal.getMeal_name());
-        return pstmt.executeUpdate();
-    }
 }

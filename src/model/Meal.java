@@ -44,7 +44,4 @@ public class Meal {
         this.price = price;
     }
 
-    public String getMealName() {
-        return meal_name;
-    }
 }
