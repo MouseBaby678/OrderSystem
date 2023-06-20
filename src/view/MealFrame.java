@@ -36,6 +36,16 @@ public class MealFrame extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.noddraw", "true");
+
+        try
+        {
+            org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+
+        } catch(Exception e){
+            //TODO exception
+        }
+        UIManager.put("RootPane.setupButtonVisible",false);
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {

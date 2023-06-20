@@ -37,6 +37,9 @@ public class OrderFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.noddraw", "true");
+
+
         EventQueue.invokeLater(new Runnable() {
 
             public void run() {
@@ -210,6 +213,16 @@ public class OrderFrame {
         mealButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.setProperty("sun.java2d.noddraw", "true");
+
+                try
+                {
+                    org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+
+                } catch(Exception error){
+                    //TODO exception
+                }
+                UIManager.put("RootPane.setupButtonVisible",false);
                 MealFrame mealFrame = new MealFrame();
                 mealFrame.setVisible(true);
             }
