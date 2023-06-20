@@ -343,6 +343,8 @@ public class OrderFrame {
         } finally {
             dbUtil.closeCon(con);
         }
+        DefaultTableModel model = (DefaultTableModel) menu_table.getModel();
+        model.setRowCount(0); // 清空原有数据
     }
 
     private void updateOrder() throws SQLException {
