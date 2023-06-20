@@ -1,20 +1,22 @@
 package view;
 
-import dao.MealDao;
-import model.Meal;
-import util.DbUtil;
+        import dao.MealDao;
+        import model.Meal;
+        import util.DbUtil;
+        import util.StringUtil;
 
-import java.awt.EventQueue;
+        import java.awt.EventQueue;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.table.DefaultTableModel;
+        import javax.swing.*;
+        import javax.swing.border.EmptyBorder;
+        import java.awt.Font;
+        import java.awt.event.ActionEvent;
+        import java.awt.event.ActionListener;
+        import java.math.BigDecimal;
+        import java.sql.Connection;
+        import java.sql.ResultSet;
+        import java.sql.SQLException;
+        import javax.swing.table.DefaultTableModel;
 
 public class MealFrame extends JFrame {
 
@@ -131,11 +133,89 @@ public class MealFrame extends JFrame {
         addButton.setFont(new Font("微软雅黑", Font.PLAIN, 16));
         addButton.setBounds(49, 422, 100, 31);
         contentPane.add(addButton);
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String mealName = mael_nameTextField.getText();
+                String price = priceTextField.getText();
+
+                if (StringUtil.isEmpty(mealName) || StringUtil.isEmpty(price)) {
+                    JOptionPane.showMessageDialog(null, "请填写菜名和价格!");
+                    return;
+                }
+
+                Connection con = null;
+                try {
+                    con = dbUtil.getCon();
+                    Meal meal = new Meal();
+                    meal.setMeal_name(mealName);
+                    meal.setPrice(new BigDecimal(price));
+
+                    MealDao.insert(con, meal);
+                    JOptionPane.showMessageDialog(null, "添加成功!");
+                    mael_nameTextField.setText("");
+                    priceTextField.setText("");
+                    fillTable();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        dbUtil.closeCon(con);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
 
         updateButton = new JButton("修改");
         updateButton.setFont(new Font("微软雅黑", Font.PLAIN, 16));
         updateButton.setBounds(171, 422, 100, 31);
         contentPane.add(updateButton);
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "请选择要修改的菜品!");
+                    return;
+                }
+
+                String mealName = mael_nameTextField.getText();
+                String price = priceTextField.getText();
+
+                if (StringUtil.isEmpty(mealName) || StringUtil.isEmpty(price)) {
+                    JOptionPane.showMessageDialog(null, "请填写菜名和价格!");
+                    return;
+                }
+
+                Connection con = null;
+                try {
+                    con = dbUtil.getCon();
+                    String oldMealName = (String) table.getValueAt(selectedRow, 0);
+
+                    Meal meal = new Meal();
+                    meal.setMeal_name(mealName);
+                    meal.setPrice(new BigDecimal(price));
+
+                    MealDao.update(con, meal);
+                    JOptionPane.showMessageDialog(null, "修改成功!");
+                    mael_nameTextField.setText("");
+                    priceTextField.setText("");
+                    fillTable();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        dbUtil.closeCon(con);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
 
         JLabel lblNewLabel_1 = new JLabel("菜名：");
         lblNewLabel_1.setFont(new Font("微软雅黑", Font.PLAIN, 16));
