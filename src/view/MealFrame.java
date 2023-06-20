@@ -286,9 +286,5 @@ public class MealFrame extends JFrame {
                 }
             }
         }
-
-
     }
-
-
 }
