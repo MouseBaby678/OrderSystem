@@ -23,7 +23,6 @@ public class OrderDao {
         if (StringUtil.isNotEmpty(order.getPhone_num())) {
             strb.append(" AND phone_num = ").append(order.getPhone_num());
         }
-        System.out.println(strb);
         PreparedStatement pstmt = con.prepareStatement(strb.toString());
         return pstmt.executeQuery();
     }
@@ -63,7 +62,6 @@ public class OrderDao {
 
         rs.close();
         pstmt.close();
-        System.out.println(mealNames);
         return mealNames;
     }
 

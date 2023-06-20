@@ -2,6 +2,9 @@ package view;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -134,6 +137,40 @@ public class OrderFrame {
             }
         });
         scrollPane.setViewportView(ordertable);
+        ordertable.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    fillMenuTable();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                try {
+                    fillMenuTable();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
 
         JLabel lblNewLabel_2 = new JLabel("修改金额");
         lblNewLabel_2.setFont(new Font("宋体", Font.PLAIN, 18));
@@ -164,16 +201,6 @@ public class OrderFrame {
             }
         });
 
-        JButton meal = new JButton("\u67E5\u770B\u83DC\u54C1");
-        meal.setFont(new Font("宋体", Font.PLAIN, 18));
-        meal.addActionListener(e -> {
-            try {
-                fillMenuTable();
-            }catch (SQLException e1){
-                e1.printStackTrace();
-            }
-        });
-
         GroupLayout gl_panel_1 = new GroupLayout(panel_1);
         gl_panel_1.setHorizontalGroup(
                 gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -186,9 +213,7 @@ public class OrderFrame {
                                 .addComponent(confirmButton, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
                                 .addGap(167)
                                 .addComponent(completeButton, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                                .addComponent(meal)
-                                .addGap(24))
+                                .addContainerGap(181, Short.MAX_VALUE))
         );
         gl_panel_1.setVerticalGroup(
                 gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -198,8 +223,7 @@ public class OrderFrame {
                                         .addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(cost_moneyField, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(confirmButton)
-                                        .addComponent(completeButton)
-                                        .addComponent(meal))
+                                        .addComponent(completeButton))
                                 .addContainerGap(29, Short.MAX_VALUE))
         );
         panel_1.setLayout(gl_panel_1);
@@ -259,7 +283,6 @@ public class OrderFrame {
         );
         frame.getContentPane().setLayout(groupLayout);
         fillTable();
-        fillMenuTable();
     }
 
     /**
@@ -348,9 +371,10 @@ public class OrderFrame {
                 model.setRowCount(0);
                 fillTable(); // Refresh the table with updated data
                 clearInputFields();
+                JOptionPane.showMessageDialog(null, "修改成功", "提示", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 // Update failed
-                System.out.println("Update failed.");
+                JOptionPane.showMessageDialog(null, "修改失败", "提示", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -376,11 +400,10 @@ public class OrderFrame {
             int rowsAffected = DiningTableDao.update(con, diningTable);
             if (rowsAffected > 0) {
                 // 更新成功
-                System.out.println("就餐完成");
                 JOptionPane.showMessageDialog(null, "就餐完成", "提示", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 // 更新失败
-                System.out.println("状态更新失败");
+                JOptionPane.showMessageDialog(null, "操作失败", "提示", JOptionPane.INFORMATION_MESSAGE);
             }
 
             // 关闭连接
@@ -402,7 +425,6 @@ public class OrderFrame {
             }
             int o_id = (int) ordertable.getValueAt(selectedRowIndex, 0);
 
-            System.out.println(o_id);
             // 调用OrderDao中的getMealNamesForOrder方法获取订单的菜名列表
             List<String> mealNames = OrderDao.getMealNamesForOrder(con, o_id);
 
