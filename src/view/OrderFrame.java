@@ -419,10 +419,6 @@ public class OrderFrame {
         try {
             con = dbUtil.getCon();
             int selectedRowIndex = ordertable.getSelectedRow();
-            if (selectedRowIndex == -1) {
-                JOptionPane.showMessageDialog(null, "请选择订单", "提示", JOptionPane.INFORMATION_MESSAGE);
-                return; // No row selected, do not update
-            }
             int o_id = (int) ordertable.getValueAt(selectedRowIndex, 0);
 
             // 调用OrderDao中的getMealNamesForOrder方法获取订单的菜名列表

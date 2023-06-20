@@ -23,7 +23,7 @@ package view;
 public class MealFrame extends JFrame {
 
     private JPanel contentPane;
-    private JTextField mealNameTextField;
+    private JTextField searchTextField;
     private JTable table;
     private JButton deleteButton;
     private JButton addButton;
@@ -65,11 +65,11 @@ public class MealFrame extends JFrame {
         lblNewLabel.setBounds(62, 23, 53, 35);
         contentPane.add(lblNewLabel);
 
-        mealNameTextField = new JTextField();
-        mealNameTextField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
-        mealNameTextField.setBounds(118, 30, 136, 23);
-        contentPane.add(mealNameTextField);
-        mealNameTextField.setColumns(10);
+        searchTextField = new JTextField();
+        searchTextField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        searchTextField.setBounds(118, 30, 136, 23);
+        contentPane.add(searchTextField);
+        searchTextField.setColumns(10);
 
         JButton searchButton = new JButton("查询");
         searchButton.setFont(new Font("微软雅黑", Font.PLAIN, 14));
@@ -94,12 +94,12 @@ public class MealFrame extends JFrame {
         table.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                fillMealName();
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-
+                fillMealName();
             }
 
             @Override
@@ -142,7 +142,7 @@ public class MealFrame extends JFrame {
                         int num = MealDao.updateStatus(con, mealName, 1);
                         if (num == 1) {
                             JOptionPane.showMessageDialog(null, "删除成功!");
-                            mealNameTextField.setText("");
+                            mael_nameTextField.setText("");
                             priceTextField.setText("");
                             fillTable();
                         } else {
@@ -153,7 +153,7 @@ public class MealFrame extends JFrame {
                         int num = MealDao.delete(con, new Meal(mealName));
                         if (num == 1) {
                             JOptionPane.showMessageDialog(null, "删除成功!");
-                            mealNameTextField.setText("");
+                            mael_nameTextField.setText("");
                             priceTextField.setText("");
                             fillTable();
                         } else {
@@ -270,6 +270,7 @@ public class MealFrame extends JFrame {
         mael_nameTextField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
         mael_nameTextField.setColumns(10);
         mael_nameTextField.setBounds(167, 316, 136, 23);
+        mael_nameTextField.setEditable(false);
         contentPane.add(mael_nameTextField);
 
         JLabel lblNewLabel_1_1 = new JLabel("价格：");
@@ -310,5 +311,11 @@ public class MealFrame extends JFrame {
                 }
             }
         }
+    }
+
+    private void fillMealName(){
+        int selectedRowIndex = table.getSelectedRow();
+        String mealName = (String) table.getValueAt(selectedRowIndex,0);
+        mael_nameTextField.setText(mealName);
     }
 }
