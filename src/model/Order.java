@@ -42,6 +42,11 @@ public class Order {
         this.phone_num = phone_num;
     }
 
+    public Order(int o_id, BigDecimal cost_money) {
+        this.o_id = o_id;
+        this.cost_money = cost_money;
+    }
+
     public void setO_id(int o_id) {
         this.o_id = o_id;
     }

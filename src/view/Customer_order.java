@@ -114,6 +114,19 @@ public class Customer_order extends JFrame {
                     String message = "请选择菜品再下单。" ;
                     JOptionPane.showMessageDialog(null, message);
                 }else {
+                    Connection con = null;
+                    try {
+                        con = dbUtil.getCon();
+                        OrderDao.update(con, new Order(o_id,totalPrice));
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }finally {
+                        try {
+                            dbUtil.closeCon(con);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                     StringBuilder messageBuilder = new StringBuilder();
                     messageBuilder.append("菜品  价格\n");
                     for (Meal meal : list) {
