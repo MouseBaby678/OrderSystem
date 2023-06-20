@@ -101,7 +101,9 @@ public class OrderFrame {
         );
 
         menu_table = new JTable();
-        menu_table.setFont(new Font("宋体", Font.PLAIN, 15));
+        menu_table.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        menu_table.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        menu_table.setRowHeight(30);
         menu_table.setModel(new DefaultTableModel(
                 new Object[][]{
                 },
@@ -120,7 +122,9 @@ public class OrderFrame {
         scrollPane_1.setViewportView(menu_table);
 
         ordertable = new JTable();
-        ordertable.setFont(new Font("宋体", Font.PLAIN, 18));
+        ordertable.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        ordertable.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        ordertable.setRowHeight(30);
         ordertable.setModel(new DefaultTableModel(
                 new Object[][]{
                 },
@@ -173,15 +177,15 @@ public class OrderFrame {
         });
 
         JLabel lblNewLabel_2 = new JLabel("修改金额");
-        lblNewLabel_2.setFont(new Font("宋体", Font.PLAIN, 18));
+        lblNewLabel_2.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 
         cost_moneyField = new JTextField();
-        cost_moneyField.setFont(new Font("宋体", Font.PLAIN, 18));
+        cost_moneyField.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         cost_moneyField.setColumns(10);
 
         JButton confirmButton = new JButton("确认");
-        confirmButton.setFont(new Font("宋体", Font.PLAIN, 18));
+        confirmButton.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         confirmButton.addActionListener(e -> {
             try {
                 updateOrder();
@@ -191,7 +195,7 @@ public class OrderFrame {
         });
 
         JButton completeButton = new JButton("就餐完成");
-        completeButton.setFont(new Font("宋体", Font.PLAIN, 18));
+        completeButton.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         completeButton.setToolTipText("");
         completeButton.addActionListener(e -> {
             try {
@@ -229,21 +233,23 @@ public class OrderFrame {
         panel_1.setLayout(gl_panel_1);
 
         JLabel lblNewLabel = new JLabel("订单编号");
-        lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 18));
+        lblNewLabel.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         o_idTxt = new JTextField();
+        o_idTxt.setFont(new Font("宋体", Font.PLAIN, 20));
         o_idTxt.setColumns(10);
 
         JLabel lblNewLabel_1 = new JLabel("手机号");
-        lblNewLabel_1.setFont(new Font("宋体", Font.PLAIN, 18));
+        lblNewLabel_1.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 
         phone_numTxt = new JTextField();
+        phone_numTxt.setFont(new Font("宋体", Font.PLAIN, 20));
         phone_numTxt.setColumns(10);
 
         JButton selectButton = new JButton("查询");
-        selectButton.setFont(new Font("宋体", Font.PLAIN, 18));
+        selectButton.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         selectButton.addActionListener(e -> {
             try {
                 searchOrder();
@@ -449,4 +455,3 @@ public class OrderFrame {
         cost_moneyField.setText("");
     }
 }
-
