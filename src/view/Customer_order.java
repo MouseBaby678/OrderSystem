@@ -117,7 +117,7 @@ public class Customer_order extends JFrame {
                     StringBuilder messageBuilder = new StringBuilder();
                     messageBuilder.append("菜品  价格\n");
                     for (Meal meal : list) {
-                        messageBuilder.append(meal.getMealName()).append(" ").append(meal.getPrice()).append("\n");
+                        messageBuilder.append(meal.getMeal_name()).append(" ").append(meal.getPrice()).append("\n");
                     }
                     messageBuilder.append("\n总价格：").append(totalPrice.toString());
 

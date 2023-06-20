@@ -17,4 +17,11 @@ public class MealDao {
         PreparedStatement pstmt = con.prepareStatement(sql.toString());
         return pstmt.executeQuery();
     }
+
+    public static int delete(Connection con, Meal meal) throws Exception {
+        String sql = "delete from meal where meal_name=?";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, meal.getMeal_name());
+        return pstmt.executeUpdate();
+    }
 }
