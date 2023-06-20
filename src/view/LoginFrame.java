@@ -43,7 +43,7 @@ public class LoginFrame extends JFrame {
      */
     public LoginFrame() {
         setResizable(false);
-        setTitle("\u5B66\u751F\u4FE1\u606F\u7BA1\u7406\u7CFB\u7EDF");
+        setTitle("后台登录");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 970, 570);
         contentPane = new JPanel();
