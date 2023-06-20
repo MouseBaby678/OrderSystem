@@ -152,7 +152,7 @@ public class Customer_order extends JFrame {
         contentPane.add(Customer_order_scrollPane);
 
         Customer_order_table = new JTable();
-
+        Customer_order_table.setFont(new Font("微软雅黑", Font.PLAIN, 20));
         Customer_order_table.setModel(new DefaultTableModel(
                 new Object[][] {
                 },
@@ -167,6 +167,7 @@ public class Customer_order extends JFrame {
                 return columnTypes[columnIndex];
             }
         });
+        Customer_order_table.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 20));
         Customer_order_scrollPane.setViewportView(Customer_order_table);
         fillTable();
 

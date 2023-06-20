@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class BusinessDao {
-    public Business login(Connection con, Business business) throws Exception {
+    public static Business login(Connection con, Business business) throws Exception {
         Business resultBusiness = null;
         String sql = "select * from business where username=? and password=?";
         PreparedStatement pstmt = con.prepareStatement(sql);
