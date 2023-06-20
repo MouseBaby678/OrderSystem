@@ -32,14 +32,17 @@ public class MealDao {
         pstmt.setBigDecimal(2, meal.getPrice());
         return pstmt.executeUpdate();
     }
-    public static int update(Connection con, Meal meal) throws SQLException {
+
+
+    public static int update(Connection con, String oldMealName, Meal meal) throws SQLException {
         String sql = "UPDATE meal SET meal_name=?, price=? WHERE meal_name=?";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, meal.getMeal_name());
         pstmt.setBigDecimal(2, meal.getPrice());
-        pstmt.setString(3, meal.getMeal_name());
+        pstmt.setString(3, oldMealName);
         return pstmt.executeUpdate();
     }
+
     public static boolean hasReferences(Connection con, String mealName) throws SQLException {
         String sql = "SELECT COUNT(*) FROM meal,order_meal WHERE meal.m_id = order_meal.m_id AND meal_name = ?";
         try (PreparedStatement pstmt = con.prepareStatement(sql)) {

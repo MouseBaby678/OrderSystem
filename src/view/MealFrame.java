@@ -243,7 +243,7 @@ public class MealFrame extends JFrame {
                     meal.setMeal_name(mealName);
                     meal.setPrice(new BigDecimal(price));
 
-                    MealDao.update(con, meal);
+                    MealDao.update(con, oldMealName, meal);
                     JOptionPane.showMessageDialog(null, "修改成功!");
                     mael_nameTextField.setText("");
                     priceTextField.setText("");
@@ -270,7 +270,6 @@ public class MealFrame extends JFrame {
         mael_nameTextField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
         mael_nameTextField.setColumns(10);
         mael_nameTextField.setBounds(167, 316, 136, 23);
-        mael_nameTextField.setEditable(false);
         contentPane.add(mael_nameTextField);
 
         JLabel lblNewLabel_1_1 = new JLabel("价格：");
