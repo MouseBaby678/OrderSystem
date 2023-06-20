@@ -25,7 +25,7 @@ public class MealDao {
         return pstmt.executeUpdate();
     }
 
-    public static int insert(Connection con, Meal meal) throws SQLException {
+    public static int add(Connection con, Meal meal) throws SQLException {
         String sql = "INSERT INTO meal (meal_name, price) VALUES (?, ?)";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, meal.getMeal_name());

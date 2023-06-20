@@ -151,7 +151,7 @@ public class MealFrame extends JFrame {
                     meal.setMeal_name(mealName);
                     meal.setPrice(new BigDecimal(price));
 
-                    MealDao.insert(con, meal);
+                    MealDao.add(con, meal);
                     JOptionPane.showMessageDialog(null, "添加成功!");
                     mael_nameTextField.setText("");
                     priceTextField.setText("");
