@@ -12,7 +12,7 @@ public class MealDao {
     public static ResultSet list(Connection con, Meal meal) throws SQLException {
         StringBuilder sql = new StringBuilder("select * from meal where is_deleted = 0");
         if(StringUtil.isNotEmpty(meal.getMeal_name())){
-            sql.append(" and meal_name = ").append(meal.getMeal_name());
+            sql.append(" and meal_name = '").append(meal.getMeal_name()).append("'");
         }
         PreparedStatement pstmt = con.prepareStatement(sql.toString());
         return pstmt.executeQuery();

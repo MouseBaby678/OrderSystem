@@ -12,6 +12,8 @@ package view;
         import java.awt.Font;
         import java.awt.event.ActionEvent;
         import java.awt.event.ActionListener;
+        import java.awt.event.MouseEvent;
+        import java.awt.event.MouseListener;
         import java.math.BigDecimal;
         import java.sql.Connection;
         import java.sql.ResultSet;
@@ -89,6 +91,32 @@ public class MealFrame extends JFrame {
         ));
         table.getTableHeader().setFont(new Font("微软雅黑", Font.PLAIN, 16));
         scrollPane.setViewportView(table);
+        table.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
 
         deleteButton = new JButton("删除");
         deleteButton.setFont(new Font("微软雅黑", Font.PLAIN, 16));
