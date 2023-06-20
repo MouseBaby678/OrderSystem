@@ -30,6 +30,10 @@ public class Order {
         this.phone_num = phone_num;
     }
 
+    public Order() {
+
+    }
+
     public int getO_id() {
         return o_id;
     }
